@@ -1,0 +1,17 @@
+										;ABLAUFSTEUERUNG
+								;---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Init:
+
+	;SET STATE=11
+	State EQU 0
+	MOV State, #11
+	left  EQU 08
+	right EQU 10
+	rightr EQU 18
+	rightl EQU 20
+	timer1 EQU 28
+	timer2 EQU 30
+	timer3 EQU 38
+	timer4 EQU 40
+	initialized EQU 48
+	zufallsbit EQU 50
