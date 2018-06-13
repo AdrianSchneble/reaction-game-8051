@@ -3,29 +3,29 @@
 Init:
 
 	;SET STATE=11
-	DRAW1 EQU 48
-	DRAW2 EQU 50
-	State EQU 10
+	DRAW1 EQU 48H
+	DRAW2 EQU 50H
+	State EQU 10H
 	MOV State, #11B
-	left  EQU 60
+	left  EQU P2.0
 	MOV left,#0b
-	right EQU 68
+	right EQU P3.0
 	MOV right,#0b
-	rightr EQU 18
+	rightr EQU 18H
 	MOV rightr,#0b
-	rightl EQU 20
+	rightl EQU 20H
 	MOV rightl,#0b
-	timerstelle1 EQU 28
+	timerstelle1 EQU 28H
 	MOV timerstelle1,#0b
-	timerstelle2 EQU 30
+	timerstelle2 EQU 30H
 	MOV timerstelle2,#0b
-	timerstelle3 EQU 38
+	timerstelle3 EQU 38H
 	MOV timerstelle3,#0b
-	timerstelle4 EQU 40
+	timerstelle4 EQU 40H
 	MOV timerstelle4,#0b
-	initialized EQU 70
+	initialized EQU 70H
 	MOV initialized,#0b
-	zufallsbit EQU 58
+	zufallsbit EQU 58H
 
 	;for timerdisplay
 	digit1 EQU timerstelle1
@@ -126,7 +126,6 @@ JEQ1:
 	ENDE:
 	;timerdecrement
 		MOV A,timerstelle4
-		SUBB A,#1d
 		MOV timerstelle4,A
 
 		;COMPARATOR
@@ -141,7 +140,6 @@ JEQ1:
 		JEQ2:
 			MOV timerstelle4,#9H
 			MOV A,timerstelle3
-			SUBB A,#1H
 			MOV timerstelle3,A
 			;COMPARATOR
 			MOV A,timerstelle3
@@ -155,7 +153,6 @@ JEQ1:
 			JEQ3:
 			MOV timerstelle3,#9H
 			MOV A,timerstelle2
-			SUBB A,#1H
 			MOV timerstelle2,A
 			;COMPARATOR
 			MOV A,timerstelle2
@@ -169,7 +166,6 @@ JEQ1:
 			JEQ4:
 			MOV timerstelle2,#9H
 			MOV A,timerstelle1
-			SUBB A,#1H
 			MOV timerstelle1,A
 			;COMPARATOR
 			MOV A,timerstelle1
@@ -186,10 +182,22 @@ JEQ1:
 				MOV initialized,#0
 				LJMP endtick
 	;end timerdecrement
-	JGT2:
-	JGT3:
-	JGT4:
 	JGT5:
+	MOV A,timerstelle1
+	SUBB A,#1D
+	MOV timerstelle1,A
+	JGT4:
+	MOV A,timerstelle2
+	SUBB A,#1D
+	MOV timerstelle2,A
+	JGT3:
+	MOV A,timerstelle3
+	SUBB A,#1D
+	MOV timerstelle3,A
+	JGT2:
+	MOV A,timerstelle4
+	SUBB A,#1D
+	MOV timerstelle4,A
 	ENDDECREMENT:
 	;ELEVATOR TO MAKE JUMPS LONGER
 	LJMP ELEVATORSKIP2
@@ -213,9 +221,11 @@ JLT1:
 JGT1:
 	MOV initialized,#1B
 	MOV timerstelle1,#0H
-	MOV timerstelle2,#5H
-	MOV timerstelle3,#0H
+	MOV timerstelle2,#0H
+	MOV timerstelle3,#1H
 	MOV timerstelle4,#0H
+	MOV DRAW1, #0H
+	MOV DRAW2, #0H
 	LJMP endtick
 StateAktiv:
 ;zeige halbes leeres display
@@ -223,7 +233,7 @@ StateAktiv:
 ;CODE: 01
 ;COMPARATOR
 			MOV A,initialized
-			CJNE A,#0B,XCOMP6
+			CJNE A,#1B,XCOMP6
 			LJMP JEQ6
 			XCOMP6:
 			JC ELE3
@@ -301,13 +311,21 @@ StateAktiv:
 	ENDINCREMENT:
 		;boolean crap
 		MOV A,left
-			MOV C,right
+			MOV C,right.0
 			CPL C
-		ANL A,R0
+			MOV right.0,C
+		ANL A,right
+			MOV C,right.0
+			CPL C
+			MOV right.0,C
 		ANL A,rightr
-			MOV C,rightl
+			MOV C,rightl.0
 			CPL C
-		ANL A,R0
+			MOV rightl.0,C
+		ANL A,rightl
+			MOV C,rightl.0
+			CPL C
+			MOV rightl.0,C
 		;COMPARATOR
 			CJNE A,#0H,XCOMP11
 			LJMP JEQ11
@@ -319,13 +337,21 @@ StateAktiv:
 		JEQ11:
 		;if A is 1 do
 		MOV A,right
-			MOV C,left
+			MOV C,left.0
 			CPL C
-		ANL A,R0
+			MOV left.0,C
+		ANL A,left
+			MOV C,left.0
+			CPL C
+			MOV left.0,C
 		ANL A,rightl
 			MOV C,rightr
 			CPL C
-		ANL A,R0
+			MOV rightr,C
+		ANL A,rightr
+			MOV C,rightr
+			CPL C
+			MOV rightr,C
 		;COMPARATOR
 			CJNE A,#0H,XCOMP12
 			LJMP JEQ12
@@ -346,10 +372,8 @@ StateAktiv:
 		MOV state,#10B
 		MOV initialized,#0B
 	DONOT33:
-		clr tr0 ; stop timer
-		MOV state,#11B
-		MOV initialized,#0B
 	FINALLY33:
+	LJMP EndTick
 JLT6:
 	MOV timerstelle1,#0D;timer=0
 	MOV timerstelle2,#0D
@@ -357,15 +381,15 @@ JLT6:
 	MOV timerstelle4,#0D
 	MOV A,zufallsbit
 	JNZ Else30
-		MOV rightr,#1B
-		MOV rightl,#0B
+		MOV rightr,#00000001B
+		MOV rightl,#00000000B
 		;Register setzen sodass alle rechten an
 		MOV DRAW1, #0CH
 		MOV DRAW2, #0H
 		LJMP END30
 	ELSE30:
-		MOV rightr,#0B
-		MOV rightl,#1B
+		MOV rightr,#00000000B
+		MOV rightl,#00000001B
 		;Register setzen sodass alle linken an
 		MOV DRAW1, #3H
 		MOV DRAW2, #0H
@@ -448,6 +472,8 @@ MOV A,initialized
 	JZ SKIP24
 		MOV State,#00b
 		MOV initialized,#0b
+		MOV left,#0b
+		MOV right,#0b
 		LJMP EndTick
 JLT14:
 MOV left,#0b
