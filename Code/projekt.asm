@@ -28,18 +28,14 @@ Init:
 	zufallsbit EQU 58H
 
 	;for timerdisplay
-	digit1 EQU timerstelle1
-	digit2 EQU timerstelle2
-	digit3 EQU timerstelle3
-	digit4 EQU timerstelle4
-	reg1 EQU R7
-	reg2 EQU R6
-	reg3 EQU R5
-	reg4 EQU R4
-	MOV reg1, #9d
-	MOV reg2, #1d
-	MOV reg3, #6d
-	MOV reg4, #4d
+	digit1 EQU R7
+	digit2 EQU R6
+	digit3 EQU R5
+	digit4 EQU R4
+	reg1 EQU timerstelle1
+	reg2 EQU timerstelle2
+	reg3 EQU timerstelle3
+	reg4 EQU timerstelle4
 ;zufallsbit:
 	mov tmod, #00000010b ; mode des timers 2 = auto reload
 	mov ie, #10010010b ; timer freischalten
@@ -348,7 +344,7 @@ StateAktiv:
 			MOV C,rightr
 			CPL C
 			MOV rightr,C
-		ANL A,rightr
+		;ANL A,rightr
 			MOV C,rightr
 			CPL C
 			MOV rightr,C
@@ -369,6 +365,8 @@ StateAktiv:
 	JGT11:
 	DO33:
 		clr tr0 ; stop timer
+		MOV left,#0B
+		MOV right,#0B
 		MOV state,#10B
 		MOV initialized,#0B
 	DONOT33:
@@ -439,19 +437,19 @@ SKIP23:
 	mov digit4,A
 	;DRAW
 	MOV P0, #11110111b
-	MOV P1, R3
+	MOV P1, digit1
 	MOV P0, #11111111b
 	MOV P1, #11111111b
 	MOV P0, #11111011b
-	MOV P1, R2
+	MOV P1, digit2
 	MOV P0, #11111111b
 	MOV P1, #11111111b
 	MOV P0, #11111101b
-	MOV P1, R1
+	MOV P1, digit3
 	MOV P0, #11111111b
 	MOV P1, #11111111b
 	MOV P0, #11111110b
-	MOV P1, R0
+	MOV P1, digit4
 	MOV P0, #11111111b
 	MOV P1, #11111111b
 	LJMP WAIT;we skip the normal draw event
