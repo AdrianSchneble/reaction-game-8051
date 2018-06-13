@@ -3,33 +3,35 @@
 Init:
 
 	;SET STATE=11
+	DRAW1 EQU 48
+	DRAW2 EQU 50
 	State EQU 10
 	MOV State, #11B
-	left  EQU 08.0
-	MOV left,#0
-	right EQU 08.1
-	MOV right,#0
+	left  EQU 60
+	MOV left,#0b
+	right EQU 68
+	MOV right,#0b
 	rightr EQU 18
-	MOV rightr,#0
+	MOV rightr,#0b
 	rightl EQU 20
-	MOV righl,#0
-	timer1 EQU 28
-	MOV timer1,#0
-	timer2 EQU 30
-	MOV timer2,#0
-	timer3 EQU 38
-	MOV timer3,#0
-	timer4 EQU 40
-	MOV timer4,#0
-	initialized EQU 48.0
-	MOV initialized,#0
-	zufallsbit EQU 48.1
+	MOV rightl,#0b
+	timerstelle1 EQU 28
+	MOV timerstelle1,#0b
+	timerstelle2 EQU 30
+	MOV timerstelle2,#0b
+	timerstelle3 EQU 38
+	MOV timerstelle3,#0b
+	timerstelle4 EQU 40
+	MOV timerstelle4,#0b
+	initialized EQU 70
+	MOV initialized,#0b
+	zufallsbit EQU 58
 
 	;for timerdisplay
-	digit1 EQU timer1
-	digit2 EQU timer2
-	digit3 EQU timer3
-	digit4 EQU timer4
+	digit1 EQU timerstelle1
+	digit2 EQU timerstelle2
+	digit3 EQU timerstelle3
+	digit4 EQU timerstelle4
 	reg1 EQU R7
 	reg2 EQU R6
 	reg3 EQU R5
@@ -48,17 +50,27 @@ Init:
 	LJMP Tick
 	;---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 										;SUB ROUTINEN
-;Tick: ausgeführt jede ms.
+;Tick: ausgefÃ¼hrt jede ms.
 Wait:
 	;warte 1ms
 	LJMP Tick
 Tick:
 	CPL zufallsbit
 	;jump depending on state
-	JCEQ state,#00B,statevoll
-	JCEQ state,#01B,stateaktiv
-	JCEQ state,#10B,statereagiert
-	JCEQ state,#11B,statefehler
+
+	MOV A,state
+	CJNE A,#00B,N1
+		LJMP statevoll
+	N1:
+	CJNE A,#01B,N2
+		LJMP stateaktiv
+	N2:
+	CJNE A,#10B,N3
+		LJMP statereagiert
+	N3:
+	CJNE A,#11B,N4
+		LJMP statefehler
+	N4: ;fehler D:
 EndTick:
 	LJMP Draw
 Draw:
@@ -92,98 +104,243 @@ StateVoll:
 ;volles display warte bis zufallstimer auslaeuft, dann -> StateAktiv
 ;wenn nutzereingabe -> StateFehler
 ;CODE: 00
-JLT initialized,ELSE;if initialized
-	MOV 0.0,left
-	XOL 0.0,right ;if either left or right is pressed
-	CJEQ 0.0,#0,END
+MOV A,initialized
+CJNE A,#1B,XCOMP1
+LJMP JEQ1
+XCOMP1:
+JC ELE1
+LJMP JGT1
+;ELEVATOR TO MAKE JUMPS LONGER
+LJMP ELEVATORSKIP1
+ELE1:
+LJMP JLT1
+ELEVATORSKIP1:
+;ELEVATORSKIP
+
+JEQ1:
+	MOV A,left
+	XRL A,right ;if either left or right is pressed
+	JZ ENDE
 		MOV state,#11B;then state=11 (Fehler)
-		MOV initialize,#0;initialized=0
-	END:
+		MOV initialized,#0;initialized=0
+	ENDE:
 	;timerdecrement
-		SUB timer4,#1d
-		JGT timer4,ENDDECREMENT
-			MOV timer4,#9d
-			SUB timer3,#1d
-			JGT timer3,ENDDECREMENT
-			MOV timer3,#9d
-			SUB timer2,#1d
-			JGT timer2,ENDDECREMENT
-			MOV timer2,#9d
-			SUB timer1,#1d
-			JGT timer1,ENDDECREMENT
-			MOV timer1,#0d;if we reach this then timer must be 0 already; this should never happen, if it does we do what should have happened
+		MOV A,timerstelle4
+		SUBB A,#1d
+		MOV timerstelle4,A
+
+		;COMPARATOR
+		MOV A,timerstelle4
+		CJNE A,#0B,XCOMP2
+		LJMP JEQ2
+		XCOMP2:
+		JC JLT2
+		LJMP JGT2
+		;ENDCOMPARATOR
+		JLT2:
+		JEQ2:
+			MOV timerstelle4,#9H
+			MOV A,timerstelle3
+			SUBB A,#1H
+			MOV timerstelle3,A
+			;COMPARATOR
+			MOV A,timerstelle3
+			CJNE A,#0B,XCOMP3
+			LJMP JEQ3
+			XCOMP3:
+			JC JLT3
+			LJMP JGT3
+			;ENDCOMPARATOR
+			JLT3:
+			JEQ3:
+			MOV timerstelle3,#9H
+			MOV A,timerstelle2
+			SUBB A,#1H
+			MOV timerstelle2,A
+			;COMPARATOR
+			MOV A,timerstelle2
+			CJNE A,#0B,XCOMP4
+			LJMP JEQ4
+			XCOMP4:
+			JC JLT4
+			LJMP JGT4
+			;ENDCOMPARATOR
+			JLT4:
+			JEQ4:
+			MOV timerstelle2,#9H
+			MOV A,timerstelle1
+			SUBB A,#1H
+			MOV timerstelle1,A
+			;COMPARATOR
+			MOV A,timerstelle1
+			CJNE A,#0B,XCOMP5
+			LJMP JEQ5
+			XCOMP5:
+			JC JLT5
+			LJMP JGT5
+			;ENDCOMPARATOR
+			JLT5:
+			JEQ5:
+			MOV timerstelle1,#0H;if we reach this then timer must be 0 already; this should never happen, if it does we do what should have happened
 				MOV STATE,#01B
 				MOV initialized,#0
 				LJMP endtick
 	;end timerdecrement
+	JGT2:
+	JGT3:
+	JGT4:
+	JGT5:
 	ENDDECREMENT:
-	JNE timer1,EndTick
-	JNE timer2,EndTick
-	JNE timer3,EndTick
-	JNE timer4,EndTick ;timer=0?
+	;ELEVATOR TO MAKE JUMPS LONGER
+	LJMP ELEVATORSKIP2
+	ELE2:
+	LJMP EndTick
+	ELEVATORSKIP2:
+	;ELEVATORSKIP
+	MOV A,timerstelle1
+	JNZ Ele2
+	MOV A,timerstelle2
+	JNZ Ele2
+	MOV A,timerstelle3
+	JNZ Ele2
+	MOV A,timerstelle4
+	JNZ Ele2 ;timer=0?
 		;else
 		MOV STATE,#01B
 		MOV initialized,#0
 		LJMP EndTick
-ELSE:
+JLT1:
+JGT1:
 	MOV initialized,#1B
-	MOV timer1,#0d
-	MOV timer2,#5d
-	MOV timer3,#0d
-	MOV timer4,#0d
+	MOV timerstelle1,#0H
+	MOV timerstelle2,#5H
+	MOV timerstelle3,#0H
+	MOV timerstelle4,#0H
 	LJMP endtick
 StateAktiv:
 ;zeige halbes leeres display
-;warte auf richtige nutzereingabe, zähle währenddessen die Ticks (ms), dann ->StateReagiert
+;warte auf richtige nutzereingabe, zÃ¤hle wÃ¤hrenddessen die Ticks (ms), dann ->StateReagiert
 ;CODE: 01
-JLT initialized,ELSE2;if initialized
-	;timerincrement
-	MOV A,timer4
+;COMPARATOR
+			MOV A,initialized
+			CJNE A,#0B,XCOMP6
+			LJMP JEQ6
+			XCOMP6:
+			JC ELE3
+			;ELEVATOR TO MAKE JUMPS LONGER
+	LJMP ELEVATORSKIP3
+	ELE3:
+	LJMP JLT6
+	ELEVATORSKIP3:
+	;ELEVATORSKIP
+			LJMP JGT6
+			;ENDCOMPARATOR
+			JGT6:
+			JEQ6:
+	MOV A,timerstelle4
 	ADD A,#1b
-	MOV timer4,A
-	JLT timer4,#10d,ENDINCREMENT
-		MOV timer4,#0d
-		MOV A,timer3
+	MOV timerstelle4,A
+			;COMPARATOR
+			MOV A,timerstelle4
+			CJNE A,#10d,XCOMP7
+			LJMP JEQ7
+			XCOMP7:
+			JC JLT7
+			LJMP JGT7
+			;ENDCOMPARATOR
+			JGT7:
+			JEQ7:
+		MOV timerstelle4,#0d
+		MOV A,timerstelle3
 		ADD A,#1b
-		MOV timer3,A
-		JLT timer3,#10d,ENDINCREMENT
-		MOV timer3,#0d
-		MOV A,timer2
+		MOV timerstelle3,A
+		;COMPARATOR
+			MOV A,timerstelle3
+			CJNE A,#10d,XCOMP8
+			LJMP JEQ8
+			XCOMP8:
+			JC JLT8
+			LJMP JGT8
+			;ENDCOMPARATOR
+			JGT8:
+			JEQ8:
+		MOV timerstelle3,#0d
+		MOV A,timerstelle2
 		ADD A,#1b
-		MOV timer2,A
-		JLT timer2,#10d,ENDINCREMENT
-		MOV timer2,#0d
-		MOV A,timer1
+		MOV timerstelle2,A
+		;COMPARATOR
+			MOV A,timerstelle2
+			CJNE A,#10d,XCOMP9
+			LJMP JEQ9
+			XCOMP9:
+			JC JLT9
+			LJMP JGT9
+			;ENDCOMPARATOR
+			JGT9:
+			JEQ9:
+		MOV timerstelle2,#0d
+		MOV A,timerstelle1
 		ADD A,#1b
-		MOV timer1,A
-		JLT timer1,#10d,ENDINCREMENT
-		MOV timer1,#9d;we just reset it to 9 to prevent overflow. Everyone above 9 secs sucks ._.
+		MOV timerstelle1,A
+		;COMPARATOR
+			MOV A,timerstelle1
+			CJNE A,#10d,XCOMP10
+			LJMP JEQ10
+			XCOMP10:
+			JC JLT10
+			LJMP JGT10
+			;ENDCOMPARATOR
+			JGT10:
+			JEQ10:
+			MOV timerstelle1,#9d;we just reset it to 9 to prevent overflow. Everyone above 9 secs sucks ._.
 	;end timerincrement
+	JLT7:
+	JLT8:
+	JLT9:
+	JLT10:
 	ENDINCREMENT:
 		;boolean crap
 		MOV A,left
-			MOV R0,right
-			CMP R0
+			MOV C,right
+			CPL C
 		ANL A,R0
 		ANL A,rightr
-			MOV R0,rightl
-			CMP R0
+			MOV C,rightl
+			CPL C
 		ANL A,R0
-		JGT A,DO33
+		;COMPARATOR
+			CJNE A,#0H,XCOMP11
+			LJMP JEQ11
+			XCOMP11:
+			JC JLT11
+			LJMP JGT11
+			;ENDCOMPARATOR
+		JLT11:
+		JEQ11:
 		;if A is 1 do
 		MOV A,right
-			MOV R0,left
-			CMP R0
+			MOV C,left
+			CPL C
 		ANL A,R0
 		ANL A,rightl
-			MOV R0,rightr
-			CMP R0
+			MOV C,rightr
+			CPL C
 		ANL A,R0
-		JGT A,DO33
+		;COMPARATOR
+			CJNE A,#0H,XCOMP12
+			LJMP JEQ12
+			XCOMP12:
+			JC JLT12
+			LJMP JGT12
+			;ENDCOMPARATOR
+		JLT12:
+		JEQ12:
 		;if A is 1 do
 		LJMP DONOT33
 		;else dont
 		;end of booleancrap
+	JGT12:
+	JGT11:
 	DO33:
 		clr tr0 ; stop timer
 		MOV state,#10B
@@ -193,12 +350,13 @@ JLT initialized,ELSE2;if initialized
 		MOV state,#11B
 		MOV initialized,#0B
 	FINALLY33:
-ELSE2:
-	MOV timer1,0B;timer=0
-	MOV timer2,0B
-	MOV timer3,0B
-	MOV timer4,0B
-	JNE zufallsbit,Else30
+JLT6:
+	MOV timerstelle1,#0D;timer=0
+	MOV timerstelle2,#0D
+	MOV timerstelle3,#0D
+	MOV timerstelle4,#0D
+	MOV A,zufallsbit
+	JNZ Else30
 		MOV rightr,#1B
 		MOV rightl,#0B
 		;Register setzen sodass alle rechten an
@@ -217,14 +375,22 @@ LJMP EndTick
 StateReagiert:
 ;warte auf nutzereingabe, zeige timerausgabe, dann -> StateVoll
 ;CODE: 10
-JLT initialized,ELSE25;if initialized
-	MOV 0.0,left
-	XOL 0.0,right ;if either left or right is pressed
-	CJEQ 0.0,#0,SKIP23
+MOV A,initialized
+			CJNE A,#0B,XCOMP13
+			LJMP JEQ13
+			XCOMP13:
+			JC JLT13
+			LJMP JGT13
+			;ENDCOMPARATOR
+			JGT13:
+			JEQ13:
+	MOV A,left
+	XRL A,right ;if either left or right is pressed
+	JZ SKIP23
 		MOV State,#00b
 		MOV initialized,#0b
 		LJMP EndTick
-ELSE25:
+JLT13:
 MOV left,#0b
 MOV right,#0b
 MOV initialized,#1b
@@ -268,14 +434,22 @@ SKIP23:
 StateFehler:
 ;warte auf nutzereingabe, zeige fehlerdisplay, dann ->StateVoll
 ;CODE: 11
-JLT initialized,ELSE26;if initialized
-	MOV 0.0,left
-	XOL 0.0,right ;if either left or right is pressed
-	CJEQ 0.0,#0,SKIP24
+MOV A,initialized
+			CJNE A,#0B,XCOMP14
+			LJMP JEQ14
+			XCOMP14:
+			JC JLT14
+			LJMP JGT14
+			;ENDCOMPARATOR
+			JGT14:
+			JEQ14:
+	MOV A,left
+	XRL A,right ;if either left or right is pressed
+	JZ SKIP24
 		MOV State,#00b
 		MOV initialized,#0b
 		LJMP EndTick
-ELSE26:
+JLT14:
 MOV left,#0b
 MOV right,#0b
 MOV initialized,#1b
