@@ -113,9 +113,8 @@ Für den Programmentwurf werden verschiedene Zustände erstellt. Analog zu Kapit
 
 \section{Code}
 
-TODO
-%TODO
-
+Analog zu dem schon beschriebenen Programmentwurf soll nun die Implementierung des Reaktionsspiels beginnen. Zur Darstellung der Reaktionszeit wird eine Datenbank verwendet, in der die Ziffern Null bis Neun gespeichert und abgerufen werden können. Jeder Zustand wird durch eine Methode realisiert. Für das Auslesen der Reaktionszeit wird ein Timer verwendet. 
+Zu Beginn des Progamms werden alle benötigten Werte initialisiert, der Timer gestartet, sowie eine erstes Zufallsbit berechnet. Dieses entscheidet später darüber, ob die linke, oder die rechte Seite aufleuchten soll.
 \section{LED Matrix}
 
 Zur Darstellung wird in diesem Projekt die virtuelle Variante eines Multiplexed LED Display verwendet, welches für die Darstellung der Spiel-Zustände und der Anzeige des Ergebnisses zum Spielende verwendet wird.
@@ -165,9 +164,8 @@ Das Zurücksetzen der Pins wird benötigt, um keine falsche “Beschriftung” d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Fazit}
-
-TODO
-%TODO
+ 
+Die Implementierung des Projekts war ein Erfolg. Das Spiel kann somit gestartet und gespielt werden. Durch die eingeschränkte Performance der MCU-8051 Entwicklungsumgebung werden jedoch nicht die realen Reaktionszeiten angezeigt, da die Hardware nicht in Echtzeit simuliert werden kann. Sollte ein Anwender die reale Reaktionszeit messen wollen, so muss er das Programm auf echter Hardware, oder auf einer performanteren Entwicklungsumgebung installieren. Zu Testzwecken reichen die Daten der Simulation jedoch völlig aus. Schwierigkeiten bei der Entwicklung tauchten vor allem auf, wenn der Befehlssatz des 8051 nicht alle benötigten Funktionen umfasst. Ein Beispiel hierfür wären erweiterte Vergleichsoperatoren, wie größer oder kleiner. Dies konnte jedoch durch einige Zeilen Code gelöst werden.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
