@@ -1,0 +1,16 @@
+\BOOKMARK [0][-]{chapter.1}{Einleitung}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Aufgabenstellung}{chapter.1}% 3
+\BOOKMARK [0][-]{chapter.2}{Grundlagen}{}% 4
+\BOOKMARK [1][-]{section.2.1}{Assemblersprache}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.2}{Der 8051 Mikrocontroller}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.3}{Entwicklungsumgebung MCU-8051 IDE}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.4}{GitHub}{chapter.2}% 8
+\BOOKMARK [0][-]{chapter.3}{Konzept}{}% 9
+\BOOKMARK [1][-]{section.3.1}{Idee}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.2}{Voraussetzungen}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.3}{Programmentwurf}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.4}{Implementierung}{}% 13
+\BOOKMARK [1][-]{section.4.1}{Code}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.2}{LED Matrix}{chapter.4}% 15
+\BOOKMARK [0][-]{chapter.5}{Fazit}{}% 16

@@ -1,0 +1,17 @@
+\select@language {ngerman}
+\contentsline {chapter}{\numberline {1}Einleitung}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Motivation}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Aufgabenstellung}{2}{section.1.2}
+\contentsline {chapter}{\numberline {2}Grundlagen}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Assemblersprache}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Der 8051 Mikrocontroller}{3}{section.2.2}
+\contentsline {section}{\numberline {2.3}Entwicklungsumgebung MCU-8051 IDE}{4}{section.2.3}
+\contentsline {section}{\numberline {2.4}GitHub}{5}{section.2.4}
+\contentsline {chapter}{\numberline {3}Konzept}{6}{chapter.3}
+\contentsline {section}{\numberline {3.1}Idee}{6}{section.3.1}
+\contentsline {section}{\numberline {3.2}Voraussetzungen}{6}{section.3.2}
+\contentsline {section}{\numberline {3.3}Programmentwurf}{7}{section.3.3}
+\contentsline {chapter}{\numberline {4}Implementierung}{8}{chapter.4}
+\contentsline {section}{\numberline {4.1}Code}{8}{section.4.1}
+\contentsline {section}{\numberline {4.2}LED Matrix}{8}{section.4.2}
+\contentsline {chapter}{\numberline {5}Fazit}{11}{chapter.5}
